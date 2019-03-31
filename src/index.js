@@ -114,7 +114,11 @@ export default class UIFrame extends React.PureComponent {
 	}
 	_handleLoad(e) {
 		const root = this.frame.contentDocument.querySelector('html')
-		this.frame.contentDocument.body.remove()
+		if (this.frame.contentDocument.body.hasOwnProperty('remove')) {
+			this.frame.contentDocument.body.remove()
+		} else { // IE11 does not support remove()
+			this.frame.contentDocument.body.parentNode.removeChild(this.frame.contentDocument.body)
+		}
 		this.setState({ root, loaded: true }, () => {
 			if (this.props.frameDidLoad) {
 				this.props.frameDidLoad()
